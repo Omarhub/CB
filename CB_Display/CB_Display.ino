@@ -5,18 +5,23 @@ int  b = 0;
 
 //dht DHT;
 //#define DHT11_PIN 2
+
 // First we include the libraries
 #include <OneWire.h> 
 #include <DallasTemperature.h>
+
 /********************************************************************/
 // Data wire is plugged into pin 2 on the Arduino 
 #define ONE_WIRE_BUS 2 
 /********************************************************************/
 // Setup a oneWire instance to communicate with any OneWire devices  
+
 // (not just Maxim/Dallas temperature ICs) 
+
 OneWire oneWire(ONE_WIRE_BUS); 
 /********************************************************************/
 // Pass our oneWire reference to Dallas Temperature. 
+
 DallasTemperature sensors(&oneWire);
 /********************************************************************/
 
@@ -24,7 +29,7 @@ int source5v = 46;
 
 
 
-#include <Wire.h> 
+//#include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
@@ -39,7 +44,7 @@ void setup() {
   lcd.init();
   
   Serial.begin(9600);
-  Serial.setTimeout(10);
+  //Serial.setTimeout(10);
 
 // Start up the library 
  sensors.begin(); 
@@ -67,7 +72,7 @@ void loop() {
   lcd.print("now Temp=");
   
   lcd.setCursor(9,0);
-  lcd.print(sensors.getTempCByIndex(1)); // Why "byIndex"?  
+  lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
    // You can have more than one DS18B20 on the same bus.  
    // 0 refers to the first IC on the wire 
    delay(1000);
