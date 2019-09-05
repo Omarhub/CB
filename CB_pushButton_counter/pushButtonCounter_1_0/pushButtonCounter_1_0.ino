@@ -14,7 +14,7 @@ const int  Up_buttonPin   = 9;    // change the pin that the pushbutton is attac
 const int  Down_buttonPin = 8;
 
 // Variables will change:
-int buttonPushCounter = 0;   // counter for the number of button presses
+int buttonPushCounter = 20;   // counter for the number of button presses
 int up_buttonState = 0;         // current state of the up button
 int up_lastButtonState = 0;     // previous state of the up button
 
