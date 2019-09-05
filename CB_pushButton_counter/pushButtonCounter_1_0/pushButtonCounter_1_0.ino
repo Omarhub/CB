@@ -14,12 +14,12 @@ const int  Up_buttonPin   = 9;    // change the pin that the pushbutton is attac
 const int  Down_buttonPin = 8;
 
 // Variables will change:
-int buttonPushCounter = 20;   // counter for the number of button presses
-int up_buttonState = 0;         // current state of the up button
-int up_lastButtonState = 0;     // previous state of the up button
+float buttonPushCounter = 20;   // counter for the number of button presses
+float up_buttonState = 0;         // current state of the up button
+float up_lastButtonState = 0;     // previous state of the up button
 
-int down_buttonState = 0;         // current state of the up button
-int down_lastButtonState = 0;     // previous state of the up button
+float down_buttonState = 0;         // current state of the up button
+float down_lastButtonState = 0;     // previous state of the up button
 bool bPress = false;
 
 
@@ -71,7 +71,7 @@ void checkUp()
     if (up_buttonState == LOW) {
         bPress = true;
       // if the current state is HIGH then the button went from off to on:
-      buttonPushCounter++;
+      buttonPushCounter += 0.5;
       Serial.println("on");
       Serial.print("number of button pushes: ");
       Serial.println(buttonPushCounter);
@@ -95,7 +95,7 @@ void checkDown()
     if (down_buttonState == LOW) {
         bPress = true;
       // if the current state is HIGH then the button went from off to on:
-      buttonPushCounter--;
+      buttonPushCounter -= 0.5;
      
       Serial.println("on");
       Serial.print("number of button pushes: ");
