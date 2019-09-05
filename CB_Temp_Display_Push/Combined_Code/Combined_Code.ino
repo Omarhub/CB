@@ -1,3 +1,4 @@
+#include <TimedAction.h>
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 #include <Wire.h>
@@ -38,9 +39,44 @@ int source5v = 46;  // for LCD power
 
 
 
+void pushButton(){
+  
+  //Serial.print("i = ");
+  //Serial.println(i);
+  lcd.setCursor(0,1);
+  lcd.print("user Temp=");
+  lcd.setCursor(11,1);
+  lcd.print(buttonPushCounter);
+  checkUp();
+  checkDown();
+
+   if( bPress){
+       bPress = false;
+      //lcd.setCursor(2,1);
+      //lcd.print("               ");
+      lcd.setCursor(2,1);
+      lcd.print(buttonPushCounter);
+   }
+  }
+
+  void tempSensor(){
+  sensors.requestTemperatures(); // Send the command to get temperature readings 
+  lcd.setCursor(0,0);  // (col,row)
+  lcd.print("now Temp=");
+  
+  lcd.setCursor(9,0);
+  lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
+   // You can have more than one DS18B20 on the same bus.  
+   // 0 refers to the first IC on the wire 
+   delay(1000);
+  
+    
+    }
 
 
 
+TimedAction tempThread = TimedAction(5000,tempSensor);
+TimedAction pushThread = TimedAction(1,pushButton);
 
 
 
@@ -65,46 +101,13 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
+  tempThread.check();
+  pushThread.check();
   
-  tempSensor();
   //pushButton();
- 
+ //tempSensor();
 }
 
-
-void pushButton(){
-  
-  //Serial.print("i = ");
-  //Serial.println(i);
-  lcd.setCursor(0,1);
-  lcd.print("user Temp=");
-  lcd.setCursor(11,1);
-  lcd.print(buttonPushCounter);
-  checkUp();
-  checkDown();
-
-   if( bPress){
-       bPress = false;
-      lcd.setCursor(2,1);
-      lcd.print("               ");
-      lcd.setCursor(2,1);
-      lcd.print(buttonPushCounter);
-   }
-  }
-
-  void tempSensor(){
-  sensors.requestTemperatures(); // Send the command to get temperature readings 
-  lcd.setCursor(0,0);  // (col,row)
-  lcd.print("now Temp=");
-  
-  lcd.setCursor(9,0);
-  lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
-   // You can have more than one DS18B20 on the same bus.  
-   // 0 refers to the first IC on the wire 
-   delay(1000);
-  
-    
-    }
 
 
 void checkUp()
