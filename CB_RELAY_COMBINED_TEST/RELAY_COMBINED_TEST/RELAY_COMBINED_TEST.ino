@@ -122,8 +122,10 @@ void loop() {
 
   tempThread.check();
   pushThread.check();
+  Serial.println(sensors.getTempCByIndex(0));
+  delay(500);
   if (buttonPushCounter<sensors.getTempCByIndex(0)) {
-    
+    //delay(1000);  // added this delay to avoid instant relays kick on!! 
     digitalWrite(relay1, LOW);
     digitalWrite(relay2, LOW);
     digitalWrite(relay3, LOW);
@@ -153,12 +155,12 @@ void checkUp()
         bPress = true;
       // if the current state is HIGH then the button went from off to on:
       buttonPushCounter += 0.5;
-      Serial.println("on");
-      Serial.print("number of button pushes: ");
-      Serial.println(buttonPushCounter);
+     // Serial.println("on");
+      //Serial.print("number of button pushes: ");
+      //Serial.println(buttonPushCounter);
     } else {
       // if the current state is LOW then the button went from on to off:
-      Serial.println("off");
+      //Serial.println("off");
     }
     // Delay a little bit to avoid bouncing
     delay(50);
@@ -178,9 +180,9 @@ void checkDown()
       // if the current state is HIGH then the button went from off to on:
       buttonPushCounter -= 0.5;
      
-      Serial.println("on");
-      Serial.print("number of button pushes: ");
-      Serial.println(buttonPushCounter);
+      //Serial.println("on");
+      //Serial.print("number of button pushes: ");
+      //Serial.println(buttonPushCounter);
     } else {
       // if the current state is LOW then the button went from on to off:
       Serial.println("off");
