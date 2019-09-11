@@ -43,9 +43,57 @@ int R2source5v = 45;
 int source5v   = 46;
 
 
+void checkUp()
+{
+  up_buttonState = digitalRead(Up_buttonPin);
 
+  // compare the buttonState to its previous state
+  if (up_buttonState != up_lastButtonState) {
+    // if the state has changed, increment the counter
+    if (up_buttonState == LOW) {
+        bPress = true;
+      // if the current state is HIGH then the button went from off to on:
+      buttonPushCounter += 0.5;
+     // Serial.println("on");
+      //Serial.print("number of button pushes: ");
+      //Serial.println(buttonPushCounter);
+    } else {
+      // if the current state is LOW then the button went from on to off:
+      //Serial.println("off");
+    }
+    // Delay a little bit to avoid bouncing
+    // delay(50); no need becuase we thread it
+  }
+  // save the current state as the last state, for next time through the loop
+  up_lastButtonState = up_buttonState;
+}
+void checkDown()
+{
+  down_buttonState = digitalRead(Down_buttonPin);
 
-void pushButton(){
+  // compare the buttonState to its previous state
+  if (down_buttonState != down_lastButtonState) {
+    // if the state has changed, increment the counter
+    if (down_buttonState == LOW) {
+        bPress = true;
+      // if the current state is HIGH then the button went from off to on:
+      buttonPushCounter -= 0.5;
+
+      //Serial.println("on");
+      //Serial.print("number of button pushes: ");
+      //Serial.println(buttonPushCounter);
+    } else {
+      // if the current state is LOW then the button went from on to off:
+      Serial.println("off");
+    }
+    // Delay a little bit to avoid bouncing
+    // delay(50); no need becuase we thread it
+  }
+  // save the current state as the last state, for next time through the loop
+  down_lastButtonState = down_buttonState;
+}
+
+void displayUserTempToLcd(){
 
   //Serial.print("i = ");
   //Serial.println(i);
@@ -53,8 +101,9 @@ void pushButton(){
   lcd.print("user Temp=");
   lcd.setCursor(11,1);
   lcd.print(buttonPushCounter);
-  checkUp();
-  checkDown();
+
+  checkUpThread.check();
+  checkDownThread.check();
 
    if( bPress){
        bPress = false;
@@ -65,7 +114,7 @@ void pushButton(){
    }
   }
 
-  void tempSensor(){
+  void displayTempFromSensorToLcd(){
   sensors.requestTemperatures(); // Send the command to get temperature readings
   lcd.setCursor(0,0);  // (col,row)
   lcd.print("now Temp=");
@@ -74,12 +123,11 @@ void pushButton(){
   lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?
    // You can have more than one DS18B20 on the same bus.
    // 0 refers to the first IC on the wire
-   delay(1000); //how about deceasing this?
+   //delay(1000);  while delay nothing else happens
     }
 
-void displayTempFromSensor{
+void displayTempFromSensorToSerial{
   Serial.println(sensors.getTempCByIndex(0));
-  delay(500);
 }
 
 void switchAllOnIfGreatorAllOffIFLess(){
@@ -97,8 +145,14 @@ void switchAllOnIfGreatorAllOffIFLess(){
 }
 
 
-TimedAction tempThread = TimedAction(5000,tempSensor);
-TimedAction pushThread = TimedAction(1,pushButton);
+TimedAction displayTempFromSensorToLcdThread = TimedAction(500,displayTempFromSensorToLcd);
+TimedAction displayUserTempToLcdThred = TimedAction(500,displayUserTempToLcd);
+TimedAction displayTempFromSensorToSerialThread = TimedAction(500,displayTempFromSensorToSerial);
+TimedAction switchAllOnIfGreatorAllOffIFLessThread = TimedAction(1000,switchAllOnIfGreatorAllOffIFLess);
+TimedAction checkUpThread = TimedAction(50,checkUp);
+TimedAction checkDownThread = TimedAction(50,checkDown);
+
+
 
 
 
@@ -133,10 +187,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  tempThread.check();
-  pushThread.check();
-  displayTempFromSensor();
-  switchAllOnIfGreatorAllOffIFLess();
+  checkUpThread.check();
+  checkDownThread.check();
+  displayTempFromSensorToLcdThread.check();
+  displayUserTempToLcdThred.check();
+  displayTempFromSensorToSerialThread.check();
+  switchAllOnIfGreatorAllOffIFLessThread.check();
 }
 
 bool isGreator()
@@ -158,54 +214,4 @@ void switchRelay(int N, bool C)
          if(C){digitalWrite(relay3, HIGH);}else{digitalWrite(relay3, LOW);}
          break;
    }
-}
-
-void checkUp()
-{
-  up_buttonState = digitalRead(Up_buttonPin);
-
-  // compare the buttonState to its previous state
-  if (up_buttonState != up_lastButtonState) {
-    // if the state has changed, increment the counter
-    if (up_buttonState == LOW) {
-        bPress = true;
-      // if the current state is HIGH then the button went from off to on:
-      buttonPushCounter += 0.5;
-     // Serial.println("on");
-      //Serial.print("number of button pushes: ");
-      //Serial.println(buttonPushCounter);
-    } else {
-      // if the current state is LOW then the button went from on to off:
-      //Serial.println("off");
-    }
-    // Delay a little bit to avoid bouncing
-    delay(50);
-  }
-  // save the current state as the last state, for next time through the loop
-  up_lastButtonState = up_buttonState;
-}
-void checkDown()
-{
-  down_buttonState = digitalRead(Down_buttonPin);
-
-  // compare the buttonState to its previous state
-  if (down_buttonState != down_lastButtonState) {
-    // if the state has changed, increment the counter
-    if (down_buttonState == LOW) {
-        bPress = true;
-      // if the current state is HIGH then the button went from off to on:
-      buttonPushCounter -= 0.5;
-
-      //Serial.println("on");
-      //Serial.print("number of button pushes: ");
-      //Serial.println(buttonPushCounter);
-    } else {
-      // if the current state is LOW then the button went from on to off:
-      Serial.println("off");
-    }
-    // Delay a little bit to avoid bouncing
-    delay(50);
-  }
-  // save the current state as the last state, for next time through the loop
-  down_lastButtonState = down_buttonState;
 }
