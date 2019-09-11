@@ -1,5 +1,5 @@
 #include <TimedAction.h>
-#include <OneWire.h> 
+#include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -7,16 +7,16 @@
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 /********************************************************************/
-// Data wire is plugged into pin 2 on the Arduino 
-#define ONE_WIRE_BUS 2 
+// Data wire is plugged into pin 2 on the Arduino
+#define ONE_WIRE_BUS 2
 /********************************************************************/
-// Setup a oneWire instance to communicate with any OneWire devices  
+// Setup a oneWire instance to communicate with any OneWire devices
 
-// (not just Maxim/Dallas temperature ICs) 
+// (not just Maxim/Dallas temperature ICs)
 
-OneWire oneWire(ONE_WIRE_BUS); 
+OneWire oneWire(ONE_WIRE_BUS);
 /********************************************************************/
-// Pass our oneWire reference to Dallas Temperature. 
+// Pass our oneWire reference to Dallas Temperature.
 
 DallasTemperature sensors(&oneWire);
 /********************************************************************/
@@ -46,7 +46,7 @@ int source5v   = 46;
 
 
 void pushButton(){
-  
+
   //Serial.print("i = ");
   //Serial.println(i);
   lcd.setCursor(0,1);
@@ -66,19 +66,35 @@ void pushButton(){
   }
 
   void tempSensor(){
-  sensors.requestTemperatures(); // Send the command to get temperature readings 
+  sensors.requestTemperatures(); // Send the command to get temperature readings
   lcd.setCursor(0,0);  // (col,row)
   lcd.print("now Temp=");
-  
+
   lcd.setCursor(9,0);
-  lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
-   // You can have more than one DS18B20 on the same bus.  
-   // 0 refers to the first IC on the wire 
-   delay(1000);
-  
-    
+  lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?
+   // You can have more than one DS18B20 on the same bus.
+   // 0 refers to the first IC on the wire
+   delay(1000); //how about deceasing this?
     }
 
+void displayTempFromSensor{
+  Serial.println(sensors.getTempCByIndex(0));
+  delay(500);
+}
+
+void switchAllOnIfGreatorAllOffIFLess(){
+  if (buttonPushCounter<sensors.getTempCByIndex(0)) {
+    //delay(1000);  // added this delay to avoid instant relays kick on!!
+    switchRelay(1,0); //switch relay1 off
+    switchRelay(2,0);
+    switchRelay(3,0);
+    }
+  else {
+    switchRelay(1,1); //switch relay1 on
+    switchRelay(2,1);
+    switchRelay(3,1);
+      }
+}
 
 
 TimedAction tempThread = TimedAction(5000,tempSensor);
@@ -90,21 +106,21 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(source5v, OUTPUT);
   digitalWrite(source5v, HIGH);
-  
+
   pinMode(R1source5v, OUTPUT);
   digitalWrite(R1source5v, HIGH);
-  
+
   pinMode(R2source5v, OUTPUT);
   digitalWrite(R2source5v, HIGH);
-  
+
   pinMode(relay1, OUTPUT);
   pinMode(relay2, OUTPUT);
   pinMode(relay3, OUTPUT);
-  digitalWrite(relay1, HIGH); 
+  digitalWrite(relay1, HIGH);
   digitalWrite(relay2, HIGH) ;
   digitalWrite(relay3, HIGH);
-  
-  lcd.init(); 
+
+  lcd.init();
 
   Serial.begin(9600) ;
   sensors.begin();
@@ -113,36 +129,36 @@ void setup() {
   pinMode( Down_buttonPin , INPUT_PULLUP);
 
   lcd.backlight();
-  
- 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
   tempThread.check();
   pushThread.check();
-  Serial.println(sensors.getTempCByIndex(0));
-  delay(500);
-  if (buttonPushCounter<sensors.getTempCByIndex(0)) {
-    //delay(1000);  // added this delay to avoid instant relays kick on!! 
-    digitalWrite(relay1, LOW);
-    digitalWrite(relay2, LOW);
-    digitalWrite(relay3, LOW);
-  
-
-    }
-  else {
-    digitalWrite(relay1, HIGH);
-    digitalWrite(relay2, HIGH);
-    digitalWrite(relay3, HIGH);
-    
-      }
-  //pushButton();
- //tempSensor();
+  displayTempFromSensor();
+  switchAllOnIfGreatorAllOffIFLess();
 }
 
+bool isGreator()
+{
+  //cheack if actual greator than desiared temp
+  //leave empty for now as this for cleaning the code later
+}
 
+void switchRelay(int N, bool C)
+{
+  switch(N) {
+      case 1 :
+        if(C){digitalWrite(relay1, HIGH);}else{digitalWrite(relay1, LOW);}
+         break;
+      case 2 :
+         if(C){digitalWrite(relay2, HIGH);}else{digitalWrite(relay3, LOW);}
+         break;
+      case 3 :
+         if(C){digitalWrite(relay3, HIGH);}else{digitalWrite(relay3, LOW);}
+         break;
+   }
+}
 
 void checkUp()
 {
@@ -179,7 +195,7 @@ void checkDown()
         bPress = true;
       // if the current state is HIGH then the button went from off to on:
       buttonPushCounter -= 0.5;
-     
+
       //Serial.println("on");
       //Serial.print("number of button pushes: ");
       //Serial.println(buttonPushCounter);
@@ -193,4 +209,3 @@ void checkDown()
   // save the current state as the last state, for next time through the loop
   down_lastButtonState = down_buttonState;
 }
-  
