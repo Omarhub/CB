@@ -134,13 +134,13 @@ void switchAllOnIfGreatorAllOffIFLess(){
   if (buttonPushCounter<sensors.getTempCByIndex(0)) {
     //delay(1000);  // added this delay to avoid instant relays kick on!!
     switchRelay(1,0); //switch relay1 off
-    switchRelay(2,0);
-    switchRelay(3,0);
+    switchRelay(2,0); //switch relay2 off
+    switchRelay(3,0); //switch relay3 off
     }
   else {
     switchRelay(1,1); //switch relay1 on
-    switchRelay(2,1);
-    switchRelay(3,1);
+    switchRelay(2,1); //switch relay2 on
+    switchRelay(3,1); //switch relay3 on
       }
 }
 
