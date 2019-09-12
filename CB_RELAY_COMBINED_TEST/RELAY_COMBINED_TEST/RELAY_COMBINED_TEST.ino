@@ -34,9 +34,16 @@ float down_buttonState = 0;         // current state of the up button
 float down_lastButtonState = 0;     // previous state of the up button
 bool bPress = false;
 
-int relay1 = 3;
-int relay2 = 4;
-int relay3 = 5;
+    // relay 1 and 2 controlls FAN1
+int relay1 = 3;  // Grey
+int relay2 = 4;  // Purple 
+    // relay 3 and 4 controlls FAN2
+int relay3 = 5;  // blue
+int relay4 = 6;  // green
+    // relay 5 and 6 controlls water pump 1
+int relay5 = 10;  // blue
+int relay6 = 11;  // green
+ 
 
 int R1source5v = 44;
 int R2source5v = 45;
@@ -100,9 +107,18 @@ void setup() {
   pinMode(relay1, OUTPUT);
   pinMode(relay2, OUTPUT);
   pinMode(relay3, OUTPUT);
+  pinMode(relay4, OUTPUT);
+  pinMode(relay5, OUTPUT);
+  pinMode(relay6, OUTPUT);
+  
   digitalWrite(relay1, HIGH); 
   digitalWrite(relay2, HIGH) ;
   digitalWrite(relay3, HIGH);
+  digitalWrite(relay4, HIGH); 
+  digitalWrite(relay5, HIGH) ;
+  digitalWrite(relay6, HIGH);
+  
+  
   
   lcd.init(); 
 
@@ -123,19 +139,24 @@ void loop() {
   tempThread.check();
   pushThread.check();
   Serial.println(sensors.getTempCByIndex(0));
-  delay(500);
+  //delay(500);
   if (buttonPushCounter<sensors.getTempCByIndex(0)) {
     //delay(1000);  // added this delay to avoid instant relays kick on!! 
     digitalWrite(relay1, LOW);
     digitalWrite(relay2, LOW);
     digitalWrite(relay3, LOW);
-  
+    digitalWrite(relay4, LOW);
+    digitalWrite(relay5, LOW);
+    digitalWrite(relay6, LOW);
 
     }
   else {
     digitalWrite(relay1, HIGH);
     digitalWrite(relay2, HIGH);
     digitalWrite(relay3, HIGH);
+    digitalWrite(relay4, HIGH);
+    digitalWrite(relay5, HIGH);
+    digitalWrite(relay6, HIGH);
     
       }
   //pushButton();
