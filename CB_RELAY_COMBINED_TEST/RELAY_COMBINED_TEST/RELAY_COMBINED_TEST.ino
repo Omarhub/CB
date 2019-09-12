@@ -36,14 +36,14 @@ bool bPress = false;
 
     // relay 1 and 2 controlls FAN1
 int relay1 = 3;  // Grey
-int relay2 = 4;  // Purple 
+int relay2 = 4;  // Purple
     // relay 3 and 4 controlls FAN2
 int relay3 = 5;  // blue
 int relay4 = 6;  // green
     // relay 5 and 6 controlls water pump 1
 int relay5 = 10;  // blue
 int relay6 = 11;  // green
- 
+
 
 int R1source5v = 44;
 int R2source5v = 45;
@@ -143,11 +143,17 @@ void switchAllOnIfGreatorAllOffIFLess(){
     switchRelay(1,0); //switch relay1 off
     switchRelay(2,0); //switch relay2 off
     switchRelay(3,0); //switch relay3 off
+    switchRelay(4,0); //switch relay4 off
+    switchRelay(5,0); //switch relay5 off
+    switchRelay(6,0); //switch relay6 off
     }
   else {
     switchRelay(1,1); //switch relay1 on
     switchRelay(2,1); //switch relay2 on
     switchRelay(3,1); //switch relay3 on
+    switchRelay(4,1); //switch relay4 on
+    switchRelay(5,1); //switch relay5 on
+    switchRelay(6,1); //switch relay6 on
       }
 }
 
@@ -180,14 +186,14 @@ void setup() {
   pinMode(relay6, OUTPUT);
   pinMode(relay5, OUTPUT);
   pinMode(relay4, OUTPUT);
-  
-  digitalWrite(relay1, HIGH); 
-  digitalWrite(relay2, HIGH) ;
-  digitalWrite(relay3, HIGH);
-  digitalWrite(relay4, HIGH); 
-  digitalWrite(relay5, HIGH) ;
-  digitalWrite(relay6, HIGH);
-  lcd.init(); 
+
+  switchRelay(1,1); //switch relay1 on
+  switchRelay(2,1); //switch relay2 on
+  switchRelay(3,1); //switch relay3 on
+  switchRelay(4,1); //switch relay4 on
+  switchRelay(5,1); //switch relay5 on
+  switchRelay(6,1); //switch relay6 on
+  lcd.init();
 
   lcd.init();
 
@@ -228,5 +234,14 @@ void switchRelay(int N, bool C)
       case 3 :
          if(C){digitalWrite(relay3, HIGH);}else{digitalWrite(relay3, LOW);}
          break;
+         case 4 :
+           if(C){digitalWrite(relay4, HIGH);}else{digitalWrite(relay4, LOW);}
+            break;
+         case 5 :
+            if(C){digitalWrite(relay5, HIGH);}else{digitalWrite(relay5, LOW);}
+            break;
+         case 6 :
+            if(C){digitalWrite(relay6, HIGH);}else{digitalWrite(relay6, LOW);}
+            break;
    }
 }
