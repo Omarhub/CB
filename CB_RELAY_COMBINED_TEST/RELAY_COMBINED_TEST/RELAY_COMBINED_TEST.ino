@@ -36,14 +36,14 @@ bool bPress = false;
 
     // relay 1 and 2 controlls FAN1
 int relay1 = 3;  // Grey
-int relay2 = 4;  // Purple 
+int relay2 = 4;  // Purple
     // relay 3 and 4 controlls FAN2
 int relay3 = 5;  // blue
 int relay4 = 6;  // green
     // relay 5 and 6 controlls water pump 1
 int relay5 = 10;  // blue
 int relay6 = 11;  // green
- 
+
 
 int R1source5v = 44;
 int R2source5v = 45;
@@ -95,11 +95,17 @@ void switchAllOnIfGreatorAllOffIFLess(){
     switchRelay(1,0); //switch relay1 off
     switchRelay(2,0);
     switchRelay(3,0);
+    switchRelay(4,0);
+    switchRelay(5,0);
+    switchRelay(6,0);
     }
   else {
     switchRelay(1,1); //switch relay1 on
     switchRelay(2,1);
     switchRelay(3,1);
+    switchRelay(4,1);
+    switchRelay(5,1);
+    switchRelay(6,1);
       }
 }
 
@@ -126,14 +132,14 @@ void setup() {
   pinMode(relay4, OUTPUT);
   pinMode(relay5, OUTPUT);
   pinMode(relay6, OUTPUT);
-  
-  digitalWrite(relay1, HIGH); 
+
+  digitalWrite(relay1, HIGH);
   digitalWrite(relay2, HIGH) ;
   digitalWrite(relay3, HIGH);
-  digitalWrite(relay4, HIGH); 
+  digitalWrite(relay4, HIGH);
   digitalWrite(relay5, HIGH) ;
   digitalWrite(relay6, HIGH);
-  lcd.init(); 
+  lcd.init();
 
   lcd.init();
 
