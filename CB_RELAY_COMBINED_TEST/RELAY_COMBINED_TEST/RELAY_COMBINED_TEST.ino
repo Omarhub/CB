@@ -44,6 +44,7 @@ int relay4 = 6;  // green
 int relay5 = 10;  // blue
 int relay6 = 11;  // green
  
+int LEDtest = 12; // to be used for ALARM
 
 int R1source5v = 44;
 int R2source5v = 45;
@@ -75,7 +76,7 @@ void pushButton(){
   void tempSensor(){
   sensors.requestTemperatures(); // Send the command to get temperature readings 
   lcd.setCursor(0,0);  // (col,row)
-  lcd.print("now Temp=");
+  lcd.print("room Temp=");
   
   lcd.setCursor(9,0);
   lcd.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
@@ -97,6 +98,9 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(source5v, OUTPUT);
   digitalWrite(source5v, HIGH);
+
+  pinMode(LEDtest, OUTPUT);
+  digitalWrite(LEDtest, HIGH);
   
   pinMode(R1source5v, OUTPUT);
   digitalWrite(R1source5v, HIGH);
